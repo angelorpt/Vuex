@@ -5,11 +5,19 @@
 </template>
 
 <script>
+    import { mapMutations } from 'vuex'
     export default {
-        
+        mounted () {
+            this.loadDados()
+        },
+        methods: {
+            loadDados () {
+                this.$store.dispatch('loadTodos')
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
-    
+
 </style>
