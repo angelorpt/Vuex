@@ -21,6 +21,14 @@ export default new Vuex.Store({
                 })
         }
     },
+    getters: {
+        todoCount(state) {
+            return state.todos.length
+        },
+        getAllTodos(state) {
+            return state.todos
+        }
+    },
     modules: {
     }
 })
