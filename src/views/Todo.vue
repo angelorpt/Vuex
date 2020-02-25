@@ -3,6 +3,9 @@
         <h3>To Dos List Completa</h3>
         <legend class="right">Total: {{ total }}</legend>
         <div>
+            <div class="progress" v-show="loading">
+                <div class="indeterminate"></div>
+            </div>
             <table>
                 <thead>
                     <th>ID</th>
@@ -34,9 +37,13 @@
             this.carregarDados()
         },
         computed: {
+            loading() {
+                return this.$store.state.loading
+            },
             ...mapGetters({
                 total: 'todoCount',
-                lstTodo: 'getAllTodos'
+                lstTodo: 'getAllTodos',
+                
             })
         },
         methods: {

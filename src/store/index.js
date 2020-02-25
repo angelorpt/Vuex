@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        todos: []
+        todos: [],
+        loading: true
     },
     mutations: {
         setTodos (state, dados) {
@@ -18,18 +19,34 @@ export default new Vuex.Store({
                     element.completed = !element.completed
                 }
             });
+        },
+        loading (state, payload) {
+            state.loading = payload
         }
     },
     actions: {
-        loadTodos () {
+        loadTodos ( { dispatch } ) {
+            dispatch('loadingOn')
             axios.get('https://jsonplaceholder.typicode.com/todos')
                 .then(response => {
                     this.commit('setTodos', response.data)
+                    dispatch('loadingOff')
                 })
         },
-        changeTodo (state, task) {
-            this.commit('changeTodo', task)
+        changeTodo ({ commit, dispatch }, task) {
+            dispatch('loadingOn')
+            setTimeout(() => {
+                commit('changeTodo', task)
+                dispatch('loadingOff')
+            }, 1500);
+        },
+        loadingOn ({commit}) {
+            commit('loading', true)
+        },
+        loadingOff ({commit}) {
+            commit('loading', false)
         }
+
     },
     getters: {
         todoCount(state) {
@@ -37,7 +54,7 @@ export default new Vuex.Store({
         },
         getAllTodos(state) {
             return state.todos
-        }
+        },
     },
     modules: {
     }
