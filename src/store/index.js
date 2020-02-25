@@ -11,6 +11,13 @@ export default new Vuex.Store({
     mutations: {
         setTodos (state, dados) {
             state.todos = dados
+        },
+        changeTodo(state, task) {
+            state.todos.forEach(element => {
+                if (element.id === task.id) {
+                    element.completed = !element.completed
+                }
+            });
         }
     },
     actions: {
@@ -19,6 +26,9 @@ export default new Vuex.Store({
                 .then(response => {
                     this.commit('setTodos', response.data)
                 })
+        },
+        changeTodo (state, task) {
+            this.commit('changeTodo', task)
         }
     },
     getters: {

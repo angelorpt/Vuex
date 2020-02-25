@@ -16,8 +16,8 @@
                         <td>{{ todo.title }}</td>
                         <td>{{ todo.userId }}</td>
                         <td>
-                            <button v-if="!todo.completed" class="btn blue darken-1 waves-effect">Concluir</button>
-                            <button v-else class="btn grey darken-1 waves-effect">Desfazer</button>
+                            <button v-if="!todo.completed" class="btn blue darken-1 waves-effect" @click="toggleCompleted(todo)">Concluir</button>
+                            <button v-else class="btn grey darken-1 waves-effect" @click="toggleCompleted(todo)">Desfazer</button>
                         </td>
                     </tr>
                 </tbody>
@@ -28,10 +28,10 @@
 </template>
 
 <script>
-    import { mapMutations, mapGetters } from 'vuex'
+    import { mapMutations, mapGetters, mapActions } from 'vuex'
     export default {
         mounted () {
-            this.loadDados()
+            this.carregarDados()
         },
         computed: {
             ...mapGetters({
@@ -42,7 +42,11 @@
         methods: {
             loadDados () {
                 this.$store.dispatch('loadTodos')
-            }
+            },
+            ...mapActions ({
+                toggleCompleted: 'changeTodo',
+                carregarDados: 'loadTodos'
+            })
         }
     }
 </script>
