@@ -25,7 +25,8 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        loadTodos ( { dispatch } ) {
+        loadTodos ( { dispatch, state } ) {
+            if (state.todos.length) { return }
             dispatch('loadingOn')
             axios.get('https://jsonplaceholder.typicode.com/todos')
                 .then(response => {
@@ -38,7 +39,7 @@ export default new Vuex.Store({
             setTimeout(() => {
                 commit('changeTodo', task)
                 dispatch('loadingOff')
-            }, 1500);
+            }, 750);
         },
         loadingOn ({commit}) {
             commit('loading', true)
@@ -55,6 +56,18 @@ export default new Vuex.Store({
         getAllTodos(state) {
             return state.todos
         },
+        todosDone(state) {
+            return state.todos.filter(element => element.completed)
+        },
+        todosUndone(state) {
+            return state.todos.filter(element => !element.completed)
+        },
+        doneCount(state) {
+            return state.todos.filter(element => element.completed).length
+        },
+        undoneCount(state) {
+            return state.todos.filter(element => !element.completed).length
+        }
     },
     modules: {
     }
