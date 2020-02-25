@@ -1,7 +1,8 @@
 <template>
     <div class="container">
-        <h3>To Dos List Completa</h3>
+        <h3>To Do List Completa</h3>
         <legend class="right">Total: {{ total }}</legend>
+        <legend class="left">Baseada na API: https://jsonplaceholder.typicode.com/todos</legend>
         <div>
             <div class="progress" v-show="loading">
                 <div class="indeterminate"></div>
