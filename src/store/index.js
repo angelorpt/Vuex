@@ -10,8 +10,8 @@ export default new Vuex.Store({
         loading: true
     },
     mutations: {
-        setTodos (state, dados) {
-            state.todos = dados
+        setTodos (state, listaDeTodos) {
+            state.todos = listaDeTodos
         },
         changeTodo(state, task) {
             state.todos.forEach(element => {
@@ -20,20 +20,27 @@ export default new Vuex.Store({
                 }
             });
         },
-        loading (state, payload) {
-            state.loading = payload
+        setLoading(state, booleanValue) {
+            state.loading = booleanValue
         }
     },
     actions: {
-        loadTodos ( { dispatch, state } ) {
+        
+        async loadTodos ( { dispatch, commit, state } ) {
+            
             if (state.todos.length) { return }
-            dispatch('loadingOn')
-            axios.get('https://jsonplaceholder.typicode.com/todos')
-                .then(response => {
-                    this.commit('setTodos', response.data)
-                    dispatch('loadingOff')
-                })
+
+            // dispatch('loadingOn') // dispatch > chama actions
+            commit('setLoading', true);
+            try {
+                const response = await axios.get('https://jsonplaceholder.typicode.com/todos');
+                commit('setTodos', response.data);
+            } catch (error) {
+                console.log(error.response);
+            }
+            commit('setLoading', false);
         },
+
         changeTodo ({ commit, dispatch }, task) {
             dispatch('loadingOn')
             setTimeout(() => {
@@ -41,8 +48,8 @@ export default new Vuex.Store({
                 dispatch('loadingOff')
             }, 750);
         },
-        loadingOn ({commit}) {
-            commit('loading', true)
+        loadingOn (context) {
+            context.commit('loading', true) // commit > chama mutations
         },
         loadingOff ({commit}) {
             commit('loading', false)
