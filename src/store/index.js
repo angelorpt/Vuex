@@ -13,7 +13,7 @@ export default new Vuex.Store({
         setTodos (state, listaDeTodos) {
             state.todos = listaDeTodos
         },
-        changeTodo(state, task) {
+        setChangeTodo(state, task) {
             state.todos.forEach(element => {
                 if (element.id === task.id) {
                     element.completed = !element.completed
@@ -29,7 +29,7 @@ export default new Vuex.Store({
         async loadTodos ( { dispatch, commit, state } ) {
             
             if (state.todos.length) { return }
-
+           
             // dispatch('loadingOn') // dispatch > chama actions
             commit('setLoading', true);
             try {
@@ -41,19 +41,13 @@ export default new Vuex.Store({
             commit('setLoading', false);
         },
 
-        changeTodo ({ commit, dispatch }, task) {
-            dispatch('loadingOn')
+        changeTodo ({ commit }, task) {
+            commit('setLoading', true);
             setTimeout(() => {
-                commit('changeTodo', task)
-                dispatch('loadingOff')
+                commit('setChangeTodo', task);
+                commit('setLoading', false);
             }, 750);
         },
-        loadingOn (context) {
-            context.commit('loading', true) // commit > chama mutations
-        },
-        loadingOff ({commit}) {
-            commit('loading', false)
-        }
 
     },
     getters: {
@@ -61,7 +55,10 @@ export default new Vuex.Store({
             return state.todos.length
         },
         getAllTodos(state) {
-            return state.todos
+            let listaTemp = [...state.todos];
+            let listaSorted = listaTemp.sort((a, b) => a.title > b.title ? 1 : (a.title < b.title ? -1 : 0) );
+            console.log(listaSorted);
+            return listaSorted;
         },
         todosDone(state) {
             return state.todos.filter(element => element.completed)
@@ -70,7 +67,8 @@ export default new Vuex.Store({
             return state.todos.filter(element => !element.completed)
         },
         doneCount(state) {
-            return state.todos.filter(element => element.completed).length
+            let lista = state.todos.filter(element => element.completed);
+            return lista.length;
         },
         undoneCount(state) {
             return state.todos.filter(element => !element.completed).length

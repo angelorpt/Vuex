@@ -1,6 +1,16 @@
 <template>
     <div class="container">
+        {{todoCount}}
         <h3>To Do List Completa</h3>
+
+        <div>
+            <ul>
+                <li>Nome: {{nome}}</li>
+                <li>Sobrenome: {{snome}}</li>
+                <li>Completo: {{nome_completo}}</li>
+            </ul>
+        </div>
+
         <legend class="right">Total: {{ total }}</legend>
         <legend class="left">Baseada na API: https://jsonplaceholder.typicode.com/todos</legend>
         <div>
@@ -20,8 +30,11 @@
                         <td>{{ todo.title }}</td>
                         <td>{{ todo.userId }}</td>
                         <td>
-                            <button v-if="!todo.completed" class="btn blue darken-1 waves-effect" @click="toggleCompleted(todo)">Concluir</button>
-                            <button v-else class="btn grey darken-1 waves-effect" @click="toggleCompleted(todo)">Desfazer</button>
+                            <button  class="btn darken-1 waves-effect"
+                                    :class="todo.completed ? 'grey' : 'blue'"
+                                    @click="toggleCompleted(todo)" >
+                                {{ todo.completed ? 'Desfazer' : 'Concluir' }}
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -32,20 +45,33 @@
 </template>
 
 <script>
-    import { mapMutations, mapGetters, mapActions } from 'vuex'
+    
+    import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
+
     export default {
+        data() {
+            return {
+                nome : 'Rafael', 
+                snome: 'Souza',
+            }
+        },
         mounted () {
             this.carregarDados()
         },
         computed: {
-            loading() {
-                return this.$store.state.loading
-            },
+
+            ...mapState(['loading', 'todos']),
+
+            ...mapGetters(['todoCount']),
+            
             ...mapGetters({
                 total: 'todoCount',
                 lstTodo: 'getAllTodos',
-                
-            })
+            }),
+
+            nome_completo() {
+                return `${this.nome} ${this.snome}`;
+            },
         },
         methods: {
             loadDados () {
